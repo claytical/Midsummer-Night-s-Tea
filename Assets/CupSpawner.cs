@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CupSpawner : MonoBehaviour {
-	public GameObject cup;
+	public GameObject[] cups;
 	public GameObject pot;
 	public bool endless = false;
 
@@ -20,10 +20,11 @@ public class CupSpawner : MonoBehaviour {
 
 	void NewCup() {
 		Vector3 pos = transform.position;
-		GameObject c = (GameObject)Instantiate(cup, pos, transform.rotation);	
+		int selectedCup = (int) Random.Range(0, cups.Length);
+		GameObject c = (GameObject)Instantiate(cups[selectedCup], pos, transform.rotation);	
 		c.transform.SetParent(gameObject.transform);
 
-		Invoke("NewCup", 3.0f);
+		Invoke("NewCup", Random.Range(1.5f, 4f));
 
 	}
 }

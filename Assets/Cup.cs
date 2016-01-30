@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Cup : MonoBehaviour {
 	public int drops;
+	public int badDrops;
 	public float speed = .1f;
 	public bool served = false;
 	public int type;

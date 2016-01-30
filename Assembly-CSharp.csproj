@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Counter.cs" />
      <Compile Include="Assets\Cup.cs" />
      <Compile Include="Assets\CupCleaner.cs" />
      <Compile Include="Assets\CupSpawner.cs" />
