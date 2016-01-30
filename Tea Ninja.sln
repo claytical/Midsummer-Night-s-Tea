@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{6EC82663-9A2C-8780-9A42-CA0D814A915C}") = "Tea Ninja", "Assembly-CSharp-firstpass.csproj", "{D7EB022E-5CAB-04CD-7F7F-D59E9BEB9329}"
+EndProject
+Project("{6EC82663-9A2C-8780-9A42-CA0D814A915C}") = "Tea Ninja", "Assembly-CSharp.csproj", "{7BD1A772-A3FA-FF5F-42F2-4EEFA1CE291F}"
+EndProject
+Project("{6EC82663-9A2C-8780-9A42-CA0D814A915C}") = "Tea Ninja", "Assembly-CSharp-Editor.csproj", "{744BD33B-B046-2CF3-3781-D645813EAAA2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7EB022E-5CAB-04CD-7F7F-D59E9BEB9329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7EB022E-5CAB-04CD-7F7F-D59E9BEB9329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7EB022E-5CAB-04CD-7F7F-D59E9BEB9329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7EB022E-5CAB-04CD-7F7F-D59E9BEB9329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BD1A772-A3FA-FF5F-42F2-4EEFA1CE291F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BD1A772-A3FA-FF5F-42F2-4EEFA1CE291F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BD1A772-A3FA-FF5F-42F2-4EEFA1CE291F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BD1A772-A3FA-FF5F-42F2-4EEFA1CE291F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744BD33B-B046-2CF3-3781-D645813EAAA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744BD33B-B046-2CF3-3781-D645813EAAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744BD33B-B046-2CF3-3781-D645813EAAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744BD33B-B046-2CF3-3781-D645813EAAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
