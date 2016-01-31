@@ -52,6 +52,7 @@
      <Compile Include="Assets\Droplet.cs" />
      <Compile Include="Assets\NinjaControl.cs" />
      <Compile Include="Assets\PotControl.cs" />
+     <Compile Include="Assets\Wallpaper.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
