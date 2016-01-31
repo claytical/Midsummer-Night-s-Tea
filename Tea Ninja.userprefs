@@ -6,10 +6,17 @@
       <File FileName="Assets/Standard Assets/2D/Scripts/Platformer2DUserControl.cs" Line="1" Column="1" />
       <File FileName="Assets/Standard Assets/2D/Scripts/Restarter.cs" Line="1" Column="1" />
       <File FileName="Assets/Standard Assets/2D/Scripts/Camera2DFollow.cs" Line="1" Column="1" />
-      <File FileName="Assets/NinjaControl.cs" Line="1" Column="1" />
       <File FileName="Assets/Standard Assets/2D/Scripts/PlatformerCharacter2D.cs" Line="1" Column="1" />
-      <File FileName="Assets/PotControl.cs" Line="31" Column="1" />
-      <File FileName="Assets/Wallpaper.cs" Line="5" Column="1" />
+      <File FileName="Assets/PotControl.cs" Line="39" Column="4" />
+      <File FileName="Assets/Wallpaper.cs" Line="25" Column="45" />
+      <File FileName="Assets/CupSpawner.cs" Line="27" Column="5" />
+      <File FileName="Assets/Cup.cs" Line="9" Column="1" />
+      <File FileName="Assets/Droplet.cs" Line="47" Column="21" />
+      <File FileName="Assets/PersonPicker.cs" Line="6" Column="1" />
+      <File FileName="Assets/Person.cs" Line="9" Column="17" />
+      <File FileName="Assets/Hold.cs" Line="20" Column="12" />
+      <File FileName="Assets/EndGame.cs" Line="23" Column="17" />
+      <File FileName="Assets/CupCleaner.cs" Line="22" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

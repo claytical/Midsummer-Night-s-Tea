@@ -3,9 +3,13 @@ using System.Collections;
 
 public class CupSpawner : MonoBehaviour {
 	public GameObject[] cups;
+	public GameObject[] couplesCups;
 	public GameObject pot;
 	public GameObject endPoint;
+	public Wallpaper wallpaper;
 	public bool endless = true;
+	public bool puck = false;
+	public int puckTimer;
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +20,18 @@ public class CupSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (puck) {
+			puckTimer--;
+			if (puckTimer <= 0) {
+				puck = false;
+
+			}
+		}
+	}
+
+	public void puckMode() {
+		puck = true;
+		puckTimer = 200;
 	}
 
 	public void flip() {
@@ -29,9 +44,16 @@ public class CupSpawner : MonoBehaviour {
 
 	void NewCup() {
 		Vector3 pos = transform.position;
-		int selectedCup = (int) Random.Range(0, cups.Length);
-		GameObject c = (GameObject)Instantiate(cups[selectedCup], pos, transform.rotation);
-		c.transform.SetParent(gameObject.transform);
+		if (puck) {
+			int selectedCup = (int) Random.Range(0, couplesCups.Length);
+			GameObject c = (GameObject)Instantiate(couplesCups[selectedCup], pos, transform.rotation);
+			c.transform.SetParent(gameObject.transform);
+		}
+		else {
+			int selectedCup = (int) Random.Range(0, cups.Length);
+			GameObject c = (GameObject)Instantiate(cups[selectedCup], pos, transform.rotation);
+			c.transform.SetParent(gameObject.transform);
+		}
 
 		Invoke("NewCup", Random.Range(2.5f, 4f));
 

@@ -28,10 +28,13 @@ public class Droplet : MonoBehaviour {
 						pot.GetComponent<PotControl>().cupsServed++;
 						if (cup.badDrops == 0) {
 							pot.streak++;
+							pot.perfectPour();
 //							cup.GetComponent<Animator>().SetTrigger("perfect");
 							cup.GetComponentInChildren<PersonPicker>().GetComponentInChildren<Person>().gameObject.GetComponent<Animator>().SetTrigger("smile");
 							if (pot.streak > 1) {
 								pot.feedbackMessage.text = "PERFECT POUR x" + pot.streak + "!";
+								//TODO: PERFECT POUR STREAK > 5 PUCK MODE
+								pot.cupSpawner.GetComponent<CupSpawner>().puckMode();
 							}
 							else {
 								pot.feedbackMessage.text = "PERFECT POUR!";
@@ -41,6 +44,7 @@ public class Droplet : MonoBehaviour {
 							cup.served = true;
 						if (pot.cupsServed%11 == 0) {
 							pot.feedbackMessage.text = "REFILL!";
+							pot.refill();
 							pot.dropsLeft += 100;
 							pot.feedback.SetTrigger("show");
 						}
@@ -50,6 +54,7 @@ public class Droplet : MonoBehaviour {
 			}
 			else {
 				Debug.Log("Wrong tea!");
+				pot.wrongTea();
 				pot.feedbackMessage.text = "WRONG TEA!";
 				pot.feedback.SetTrigger("show");
 

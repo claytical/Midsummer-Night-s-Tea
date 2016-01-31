@@ -15,7 +15,7 @@ public class CupCleaner : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D coll) {
 		//TODO: UNDER POUR
 		if (!coll.gameObject.GetComponentInParent<Cup>().served) {
-			pot.feedbackMessage.text = "NOT ENOUGH!";
+			pot.feedbackMessage.text = "MORE TEA PLEASE!";
 			pot.feedback.SetTrigger("show");
 			pot.streak = 0;
 			pot.strikes++;

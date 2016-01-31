@@ -9,9 +9,14 @@ public class PotControl : MonoBehaviour {
 	public GameObject spigot;
 	public Text teaLeft;
 	public Text served;
+	public Text endServed;
 	public GameObject completePanel;
 	public GameObject startPanel;
 	public GameObject cupSpawner;
+	public AudioClip perfectPourFx;
+	public AudioClip refillFx;
+	public AudioClip wrongTeaFx;
+
 	public Animator feedback;
 	public Text feedbackMessage;
 	private int counter = 0;
@@ -31,7 +36,29 @@ public class PotControl : MonoBehaviour {
 		GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
 
 	}
-	
+	public void perfectPour() {
+		GetComponent<AudioSource>().PlayOneShot(perfectPourFx);
+	}
+	public void wrongTea() {
+		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx);
+	}
+
+	public void refill() {
+		GetComponent<AudioSource>().PlayOneShot(refillFx);
+	}
+
+	public void refresh() {
+		pouring = false;
+		dropsLeft = 100;
+		cupsServed = 0;
+		served.text = cupsServed.ToString();
+		teaLeft.text = dropsLeft.ToString();
+		streak = 0;
+		selectedDroplet = 0;
+		foreach (Transform childTransform in cupSpawner.transform) {
+			Destroy(childTransform.gameObject);
+		}
+	}
 	// Update is called once per frame
 	void Update () {
 		if (pouring) {
@@ -85,6 +112,7 @@ public class PotControl : MonoBehaviour {
 					GameObject tea = (GameObject)Instantiate(droplet[selectedDroplet], pos, qua);	
 					dropsLeft--;
 					if (dropsLeft <= 0) {
+						endServed.text = served.text + " Customers Served!";
 						completePanel.SetActive(true);
 						pouring = false;
 					}
