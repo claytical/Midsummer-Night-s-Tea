@@ -50,7 +50,8 @@
      <Compile Include="Assets\CupCleaner.cs" />
      <Compile Include="Assets\CupSpawner.cs" />
      <Compile Include="Assets\Droplet.cs" />
-     <Compile Include="Assets\NinjaControl.cs" />
+     <Compile Include="Assets\Person.cs" />
+     <Compile Include="Assets\PersonPicker.cs" />
      <Compile Include="Assets\PotControl.cs" />
      <Compile Include="Assets\Wallpaper.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />

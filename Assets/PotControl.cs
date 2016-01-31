@@ -28,6 +28,7 @@ public class PotControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
 
 	}
 	
@@ -38,8 +39,11 @@ public class PotControl : MonoBehaviour {
 				selectedDroplet++;
 				if (selectedDroplet >= droplet.Length) {
 					selectedDroplet = 0;
+
+
 				}
-				GetComponent<Animator>().SetInteger("type",selectedDroplet);
+				GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
+				//GetComponent<Animator>().SetInteger("type",selectedDroplet);
 
 			}
 
@@ -73,7 +77,7 @@ public class PotControl : MonoBehaviour {
 			}
 			if (transform.rotation.eulerAngles.z <= endingPourAngle && transform.rotation.eulerAngles.z >= startingPourAngle && dropsLeft > 0) {
 				counter++;
-				int stepper = (int) map(transform.rotation.eulerAngles.z, startingPourAngle, endingPourAngle, 1, 20);
+				int stepper = (int) map(transform.rotation.eulerAngles.z, startingPourAngle, endingPourAngle, 1, 15);
 				if (counter%stepper == 0) {
 					Vector3 pos = spigot.transform.position;
 					Vector3 upright = new Vector3(0,0,0);
@@ -90,13 +94,12 @@ public class PotControl : MonoBehaviour {
 			served.text = cupsServed.ToString();
 			teaLeft.text = dropsLeft.ToString();
 		}
-		else {
-			if(Input.GetKeyDown(KeyCode.UpArrow)) {
-				pouring = true;
-				startPanel.SetActive(false);
-				cupSpawner.SetActive(true);
-			}
-		}
+	}
+
+	public void pour() {
+		pouring = true;
+		cupSpawner.SetActive(true);
+
 	}
 
 	float map(float s, float a1, float a2, float b1, float b2)
