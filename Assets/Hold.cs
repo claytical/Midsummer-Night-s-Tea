@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Hold : MonoBehaviour {
 	private float timer;
+	public AudioSource hud;
 	public PotControl pot;
 	// Use this for initialization
 	void Start () {

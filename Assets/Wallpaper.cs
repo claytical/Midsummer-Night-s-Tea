@@ -7,7 +7,6 @@ public class Wallpaper : MonoBehaviour {
 	public Material day;
 	// Use this for initialization
 	void Start () {
-		setNight();
 	}
 	
 	// Update is called once per frame

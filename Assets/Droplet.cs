@@ -23,7 +23,7 @@ public class Droplet : MonoBehaviour {
 			//TODO: Check Tea Type
 			if (cup.type == dropletType) {
 				cup.drops++;
-				if (cup.drops  >= 5 && cup.drops <= 8 && !cup.served) {
+				if (cup.drops  >= 4 && cup.drops <= 6 && !cup.served) {
 					if (!cup.served) {
 						pot.GetComponent<PotControl>().cupsServed++;
 						if (cup.badDrops == 0) {
@@ -42,7 +42,7 @@ public class Droplet : MonoBehaviour {
 							pot.feedback.SetTrigger("show");
 						}
 							cup.served = true;
-						if (pot.cupsServed%11 == 0) {
+						if (pot.cupsServed%7 == 0) {
 							pot.feedbackMessage.text = "REFILL!";
 							pot.refill();
 							pot.dropsLeft += 100;

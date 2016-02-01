@@ -10,11 +10,12 @@ public class CupSpawner : MonoBehaviour {
 	public bool endless = true;
 	public bool puck = false;
 	public int puckTimer;
+	public GameObject puckCock;
 
 	// Use this for initialization
 	void Start () {
 		if (endless) {
-			Invoke("NewCup", 3.0f);
+			Invoke("NewCup", 1.0f);
 			}
 		}
 	
@@ -24,6 +25,8 @@ public class CupSpawner : MonoBehaviour {
 			puckTimer--;
 			if (puckTimer <= 0) {
 				puck = false;
+				wallpaper.setDay();
+				puckCock.SetActive(false);
 
 			}
 		}
@@ -31,7 +34,10 @@ public class CupSpawner : MonoBehaviour {
 
 	public void puckMode() {
 		puck = true;
-		puckTimer = 200;
+		puckTimer = 400;
+		wallpaper.setNight();
+		puckCock.SetActive(true);
+
 	}
 
 	public void flip() {
@@ -44,16 +50,12 @@ public class CupSpawner : MonoBehaviour {
 
 	void NewCup() {
 		Vector3 pos = transform.position;
+		int selectedCup = (int) Random.Range(0, cups.Length);
+		GameObject c = (GameObject)Instantiate(cups[selectedCup], pos, transform.rotation);
 		if (puck) {
-			int selectedCup = (int) Random.Range(0, couplesCups.Length);
-			GameObject c = (GameObject)Instantiate(couplesCups[selectedCup], pos, transform.rotation);
-			c.transform.SetParent(gameObject.transform);
+			c.GetComponent<Cup>().speed *= 1.1f;
 		}
-		else {
-			int selectedCup = (int) Random.Range(0, cups.Length);
-			GameObject c = (GameObject)Instantiate(cups[selectedCup], pos, transform.rotation);
-			c.transform.SetParent(gameObject.transform);
-		}
+		c.transform.SetParent(gameObject.transform);
 
 		Invoke("NewCup", Random.Range(2.5f, 4f));
 

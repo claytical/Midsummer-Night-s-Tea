@@ -13,11 +13,13 @@ public class PotControl : MonoBehaviour {
 	public GameObject completePanel;
 	public GameObject startPanel;
 	public GameObject cupSpawner;
+	public AudioSource backgroundMusic;
 	public AudioClip perfectPourFx;
 	public AudioClip refillFx;
 	public AudioClip wrongTeaFx;
 
 	public Animator feedback;
+	public Animator hud;
 	public Text feedbackMessage;
 	private int counter = 0;
 	public int streak = 0;
@@ -33,7 +35,9 @@ public class PotControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
+		Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
+		c.a = 100f;
+		GetComponent<SpriteRenderer>().color = c;
 
 	}
 	public void perfectPour() {
@@ -45,10 +49,12 @@ public class PotControl : MonoBehaviour {
 
 	public void refill() {
 		GetComponent<AudioSource>().PlayOneShot(refillFx);
+		hud.SetTrigger("normal");
 	}
 
 	public void refresh() {
 		pouring = false;
+		hud.SetTrigger("normal");
 		dropsLeft = 100;
 		cupsServed = 0;
 		served.text = cupsServed.ToString();
@@ -62,6 +68,10 @@ public class PotControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (pouring) {
+
+			if (dropsLeft == 15) {
+				hud.SetTrigger("low");
+			}
 			if(Input.GetKeyDown("space")) {
 				selectedDroplet++;
 				if (selectedDroplet >= droplet.Length) {
@@ -69,7 +79,16 @@ public class PotControl : MonoBehaviour {
 
 
 				}
-				GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
+
+				if (dropsLeft == 10) {
+					feedbackMessage.text = "RUNNING OUT OF TEA!";
+					feedback.SetTrigger("show");
+				}
+				Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
+				c.a = 100f;
+				GetComponent<SpriteRenderer>().color = c;
+
+//				GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
 				//GetComponent<Animator>().SetInteger("type",selectedDroplet);
 
 			}
@@ -112,6 +131,7 @@ public class PotControl : MonoBehaviour {
 					GameObject tea = (GameObject)Instantiate(droplet[selectedDroplet], pos, qua);	
 					dropsLeft--;
 					if (dropsLeft <= 0) {
+						backgroundMusic.Stop();
 						endServed.text = served.text + " Customers Served!";
 						completePanel.SetActive(true);
 						pouring = false;
