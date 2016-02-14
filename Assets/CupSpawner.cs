@@ -8,35 +8,47 @@ public class CupSpawner : MonoBehaviour {
 	public GameObject endPoint;
 	public Wallpaper wallpaper;
 	public bool endless = true;
-	public bool puck = false;
-	public int puckTimer;
+	public int direction;
 	public GameObject puckCock;
+	public float waitingTime;
+	private float originalWaitingTime;
+	private int cupCounter;
 
 	// Use this for initialization
 	void Start () {
-		if (endless) {
-			Invoke("NewCup", 1.0f);
-			}
-		}
+		cupCounter = 0;
+		originalWaitingTime = waitingTime;
+	}
 	
 	// Update is called once per frame
-	void Update () {
-		if (puck) {
-			puckTimer--;
-			if (puckTimer <= 0) {
-				puck = false;
-				wallpaper.setDay();
-				puckCock.SetActive(false);
+	public void setWaitingTime(float wait) {
+		waitingTime = wait;
+		originalWaitingTime = wait;
+	}
 
-			}
+	public void resetWaitingTime() {
+		cupCounter = 0;
+		waitingTime = 8f;
+	}
+
+	void Update () {
+
+		if(!puckCock.GetComponent<AudioSource>().isPlaying && puckCock.activeSelf) {
+			wallpaper.setDay();
+			pot.GetComponent<PotControl>().backgroundMusic.Play();
+			puckCock.SetActive(false);		
 		}
+
+		if (transform.childCount == 0) {
+			NewCup();
+		}
+
 	}
 
 	public void puckMode() {
-		puck = true;
-		puckTimer = 400;
 		wallpaper.setNight();
 		puckCock.SetActive(true);
+
 
 	}
 
@@ -49,15 +61,18 @@ public class CupSpawner : MonoBehaviour {
 	}
 
 	void NewCup() {
+		cupCounter++;
 		Vector3 pos = transform.position;
 		int selectedCup = (int) Random.Range(0, cups.Length);
 		GameObject c = (GameObject)Instantiate(cups[selectedCup], pos, transform.rotation);
-		if (puck) {
-			c.GetComponent<Cup>().speed *= 1.1f;
+		if (cupCounter%5 == 0) {
+			waitingTime *= .85f;
 		}
+		c.GetComponent<Cup>().waitingTime = waitingTime;
+		c.GetComponent<Cup>().move(direction);
 		c.transform.SetParent(gameObject.transform);
 
-		Invoke("NewCup", Random.Range(2.5f, 4f));
-
+//		Invoke("NewCup", Random.Range(2.5f, 4f));
+//		Invoke("NewCup", Random.Range(8f, 11f));
 	}
 }

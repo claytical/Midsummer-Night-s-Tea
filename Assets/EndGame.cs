@@ -20,7 +20,7 @@ public class EndGame : MonoBehaviour {
 	}
 
 	public void backtoMain() {
-		pot.refresh();
+		Application.LoadLevel(0);
 	}
 
 

@@ -10,13 +10,14 @@ public class PotControl : MonoBehaviour {
 	public Text teaLeft;
 	public Text served;
 	public Text endServed;
+	public Text failureMessage;
 	public GameObject completePanel;
-	public GameObject startPanel;
-	public GameObject cupSpawner;
+	public GameObject[] cupSpawner;
 	public AudioSource backgroundMusic;
 	public AudioClip perfectPourFx;
 	public AudioClip refillFx;
 	public AudioClip wrongTeaFx;
+	public AudioClip comboFx;
 
 	public Animator feedback;
 	public Animator hud;
@@ -32,19 +33,32 @@ public class PotControl : MonoBehaviour {
 	public bool gravity = false;
 	public bool pouring = false;
 	private float gravitySpeed = .9f;
+	private float failTimer;
+
 
 	// Use this for initialization
 	void Start () {
-		Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
-		c.a = 100f;
-		GetComponent<SpriteRenderer>().color = c;
-
+		refresh();
 	}
 	public void perfectPour() {
-		GetComponent<AudioSource>().PlayOneShot(perfectPourFx);
+		if (streak > 1) {
+			GetComponent<AudioSource>().PlayOneShot(comboFx,2f);
+
+		}
+		else {
+			GetComponent<AudioSource>().PlayOneShot(perfectPourFx,2f);
+		}
 	}
-	public void wrongTea() {
-		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx);
+		
+	public void serve() {
+		cupsServed++;
+		if (cupsServed%7 == 0) {
+			feedbackMessage.text = "REFILL!";
+			refill();
+			dropsLeft += 75;
+			feedback.SetTrigger("show");
+		}
+
 	}
 
 	public void refill() {
@@ -54,6 +68,8 @@ public class PotControl : MonoBehaviour {
 
 	public void refresh() {
 		pouring = false;
+		failTimer = 9999f;
+
 		hud.SetTrigger("normal");
 		dropsLeft = 100;
 		cupsServed = 0;
@@ -61,14 +77,68 @@ public class PotControl : MonoBehaviour {
 		teaLeft.text = dropsLeft.ToString();
 		streak = 0;
 		selectedDroplet = 0;
-		foreach (Transform childTransform in cupSpawner.transform) {
-			Destroy(childTransform.gameObject);
+		clearCups();
+		Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
+		c.a = 100f;
+		GetComponent<SpriteRenderer>().color = c;
+
+	}
+
+	private void clearCups() {
+		for (int i = 0; i < cupSpawner.Length; i++) {
+			foreach (Transform childTransform in cupSpawner[i].transform) {
+				Destroy(childTransform.gameObject);
+			}
+			cupSpawner[i].GetComponent<CupSpawner>().resetWaitingTime();
+			cupSpawner[i].SetActive(false);
 		}
+
+	}
+
+	public void wrongTea() {
+		clearCups();
+		backgroundMusic.Stop();
+		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
+	
+		failureMessage.text = "WRONG TEA!";
+		endServed.text = served.text + " Customers Served";
+		completePanel.SetActive(true);
+		pouring = false;
+	}
+
+	public void outOfTea() {
+		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
+		clearCups();
+		backgroundMusic.Stop();
+		failureMessage.text = "OUT OF TEA!";
+		endServed.text = served.text + " Customers Served";
+		completePanel.SetActive(true);
+		pouring = false;
+
+	}
+
+	public void missed() {
+		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
+
+		clearCups();
+		failureMessage.text = "TOO SLOW";
+		backgroundMusic.Stop();
+		endServed.text = served.text + " Customers Served";
+		completePanel.SetActive(true);
+		pouring = false;
+
 	}
 	// Update is called once per frame
+
 	void Update () {
 		if (pouring) {
-
+			if (dropsLeft <= 0) {
+				failTimer -= Time.deltaTime;
+			}
+			if (failTimer <= 0) {
+				//FAIL
+				outOfTea();
+			}
 			if (dropsLeft == 15) {
 				hud.SetTrigger("low");
 			}
@@ -88,8 +158,6 @@ public class PotControl : MonoBehaviour {
 				c.a = 100f;
 				GetComponent<SpriteRenderer>().color = c;
 
-//				GetComponent<SpriteRenderer>().color = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
-				//GetComponent<Animator>().SetInteger("type",selectedDroplet);
 
 			}
 
@@ -112,31 +180,50 @@ public class PotControl : MonoBehaviour {
 					}
 				}
 
+				Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
+
+				if(Input.GetKey(KeyCode.LeftArrow)) {
+					if (transform.position.x > -7) {
+						pos.x -= .1f;
+					}
+				}
+
+				if(Input.GetKey(KeyCode.RightArrow)) {
+					if (transform.position.x < 7) {
+						pos.x +=.1f;
+					}
+				}
+
+				transform.position = pos;
+
+
 				gravitySpeed *= 1.9f;
 				Vector3 rot = new Vector3(0,0, -1 * gravitySpeed);
 				transform.Rotate(rot);	
+
+			
+			
 			}
 			else {
 				float h = CrossPlatformInputManager.GetAxis("Horizontal") * tiltSpeed;
 				Vector3 rot = new Vector3(0,0,h);
 				transform.Rotate(rot);
 			}
+				
 			if (transform.rotation.eulerAngles.z <= endingPourAngle && transform.rotation.eulerAngles.z >= startingPourAngle && dropsLeft > 0) {
 				counter++;
 				int stepper = (int) map(transform.rotation.eulerAngles.z, startingPourAngle, endingPourAngle, 1, 15);
 				if (counter%stepper == 0) {
-					Vector3 pos = spigot.transform.position;
-					Vector3 upright = new Vector3(0,0,0);
-					Quaternion qua = new Quaternion(0,0,0,0);
-					GameObject tea = (GameObject)Instantiate(droplet[selectedDroplet], pos, qua);	
-					dropsLeft--;
-					if (dropsLeft <= 0) {
-						backgroundMusic.Stop();
-						endServed.text = served.text + " Customers Served!";
-						completePanel.SetActive(true);
-						pouring = false;
+					if (dropsLeft > 0) {
+						dropsLeft--;
+						if (dropsLeft == 0) {
+								failTimer = 3f;
+						}
+						Vector3 pos = spigot.transform.position;
+						Vector3 upright = new Vector3(0,0,0);
+						Quaternion qua = new Quaternion(0,0,0,0);
+						GameObject tea = (GameObject)Instantiate(droplet[selectedDroplet], pos, qua);	
 					}
-
 				}
 			}
 			served.text = cupsServed.ToString();
@@ -146,7 +233,11 @@ public class PotControl : MonoBehaviour {
 
 	public void pour() {
 		pouring = true;
-		cupSpawner.SetActive(true);
+		for (int i = 0; i < cupSpawner.Length; i++) {
+			cupSpawner[i].SetActive(true);
+
+		}
+		backgroundMusic.Play();
 
 	}
 
