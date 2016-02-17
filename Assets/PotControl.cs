@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PotControl : MonoBehaviour {
 	public GameObject[] droplet;
+	public GameObject puckCock;
 	public int selectedDroplet = 0;
 	public GameObject spigot;
 	public Text teaLeft;
@@ -18,11 +19,11 @@ public class PotControl : MonoBehaviour {
 	public AudioClip refillFx;
 	public AudioClip wrongTeaFx;
 	public AudioClip comboFx;
+	public Wallpaper wallpaper;
 
 	public Animator feedback;
 	public Animator hud;
 	public Text feedbackMessage;
-	private int counter = 0;
 	public int streak = 0;
 	public int startingPourAngle = 255;
 	public int endingPourAngle = 325;
@@ -32,14 +33,37 @@ public class PotControl : MonoBehaviour {
 	public float tiltSpeed = 1.5f;
 	public bool gravity = false;
 	public bool pouring = false;
+
 	private float gravitySpeed = .9f;
 	private float failTimer;
-
+	private int counter = 0;
 
 	// Use this for initialization
 	void Start () {
 		refresh();
 	}
+
+	public void puckMode(bool active) {
+		puckCock.SetActive(active);
+		for (int i = 0; i < cupSpawner.Length; i++) {
+			cupSpawner[i].GetComponent<CupSpawner>().couples = active;
+		}
+
+		if (active) {
+			teaLeft.color = Color.white;
+			served.color = Color.white;
+			backgroundMusic.Stop();
+			wallpaper.setNight();
+		}
+		else {
+			teaLeft.color = Color.black;
+			served.color = Color.black;
+			wallpaper.setDay();
+			backgroundMusic.Play();
+		}
+
+	}
+
 	public void perfectPour() {
 		if (streak > 1) {
 			GetComponent<AudioSource>().PlayOneShot(comboFx,2f);
@@ -52,10 +76,10 @@ public class PotControl : MonoBehaviour {
 		
 	public void serve() {
 		cupsServed++;
-		if (cupsServed%7 == 0) {
+		if (cupsServed%8 == 0) {
 			feedbackMessage.text = "REFILL!";
 			refill();
-			dropsLeft += 75;
+			dropsLeft += 95;
 			feedback.SetTrigger("show");
 		}
 
@@ -71,7 +95,7 @@ public class PotControl : MonoBehaviour {
 		failTimer = 9999f;
 
 		hud.SetTrigger("normal");
-		dropsLeft = 100;
+		dropsLeft = 105;
 		cupsServed = 0;
 		served.text = cupsServed.ToString();
 		teaLeft.text = dropsLeft.ToString();
@@ -97,6 +121,7 @@ public class PotControl : MonoBehaviour {
 
 	public void wrongTea() {
 		clearCups();
+		puckMode(false);
 		backgroundMusic.Stop();
 		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
 	
@@ -108,6 +133,7 @@ public class PotControl : MonoBehaviour {
 
 	public void outOfTea() {
 		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
+		puckMode(false);
 		clearCups();
 		backgroundMusic.Stop();
 		failureMessage.text = "OUT OF TEA!";
@@ -118,8 +144,8 @@ public class PotControl : MonoBehaviour {
 	}
 
 	public void missed() {
+		puckMode(false);
 		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
-
 		clearCups();
 		failureMessage.text = "TOO SLOW";
 		backgroundMusic.Stop();
@@ -131,6 +157,12 @@ public class PotControl : MonoBehaviour {
 	// Update is called once per frame
 
 	void Update () {
+		if (puckCock.activeSelf) {
+			if(!puckCock.GetComponent<AudioSource>().isPlaying) {
+				puckMode(false);
+			}
+		}
+
 		if (pouring) {
 			if (dropsLeft <= 0) {
 				failTimer -= Time.deltaTime;
@@ -220,7 +252,6 @@ public class PotControl : MonoBehaviour {
 								failTimer = 3f;
 						}
 						Vector3 pos = spigot.transform.position;
-						Vector3 upright = new Vector3(0,0,0);
 						Quaternion qua = new Quaternion(0,0,0,0);
 						GameObject tea = (GameObject)Instantiate(droplet[selectedDroplet], pos, qua);	
 					}

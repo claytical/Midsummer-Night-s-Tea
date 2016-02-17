@@ -4,18 +4,18 @@ using System.Collections;
 public class Cup : MonoBehaviour {
 	public int drops;
 	public int badDrops;
-	public float speed = .2f;
 	public bool served = false;
 	public float waitingTime;
 	public bool waiting;
 	public SpriteRenderer fill;
 	public int type;
+
 	private Vector3 waitingPosition;
 	private Vector3 originalPosition;
 	private int delayCheck;
-	private bool overpoured = false;
 	private PotControl pot;
 	// Use this for initialization
+
 	void Start () {
 		originalPosition = transform.position;
 		delayCheck = 0;
@@ -82,25 +82,25 @@ public class Cup : MonoBehaviour {
 			pot.perfectPour();
 			pot.feedback.SetTrigger("show");
 			Debug.Log("PERFECT POUR");
-			if(pot.streak%3 == 0) {
-				pot.cupSpawner[0].GetComponent<CupSpawner>().puckMode();
-				pot.backgroundMusic.Stop();
+			if(pot.streak%3==0) {
+				pot.puckMode(true);
 			}
 		}
 
-		else if (badDrops > 0) {
+		else if (badDrops > 1) {
 			//WRONG TEA
 
-//			pot.streak = 0;
 			pot.wrongTea();
 			pot.feedbackMessage.text = "WRONG TEA!";
 			pot.feedback.SetTrigger("show");
-			pot.cupSpawner[0].GetComponent<CupSpawner>().puckCock.SetActive(false);
-
+			pot.puckMode(false);
 			Debug.Log("WRONG TEA");
 		}
-
-		else if(drops > 6) {
+		else if (drops > 6 && drops <= 8) {
+			pot.serve();
+			pot.streak = 0;
+		}
+		else if(drops > 8) {
 			//OVER POUR
 			pot.serve();
 			pot.feedbackMessage.text = "OVER POUR!";
@@ -113,8 +113,6 @@ public class Cup : MonoBehaviour {
 //			pot.streak = 0;
 			pot.missed();
 			Debug.Log("WAITED TOO LONG");
-			pot.cupSpawner[0].GetComponent<CupSpawner>().puckCock.SetActive(false);
-
 		}
 
 	}
