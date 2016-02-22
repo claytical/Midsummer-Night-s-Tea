@@ -19,6 +19,10 @@ public class PotControl : MonoBehaviour {
 	public AudioClip refillFx;
 	public AudioClip wrongTeaFx;
 	public AudioClip comboFx;
+	public AudioClip puckDoneFx;
+	public AudioClip overPourFx;
+	public AudioClip outOfTeaFx;
+	public AudioClip missedFx;
 	public Wallpaper wallpaper;
 
 	public Animator feedback;
@@ -72,6 +76,9 @@ public class PotControl : MonoBehaviour {
 		else {
 			GetComponent<AudioSource>().PlayOneShot(perfectPourFx,2f);
 		}
+	}
+	public void overPour() {
+		GetComponent<AudioSource>().PlayOneShot(overPourFx,2f);
 	}
 		
 	public void serve() {
@@ -132,7 +139,7 @@ public class PotControl : MonoBehaviour {
 	}
 
 	public void outOfTea() {
-		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
+		GetComponent<AudioSource>().PlayOneShot(outOfTeaFx,2f);
 		puckMode(false);
 		clearCups();
 		backgroundMusic.Stop();
@@ -145,7 +152,7 @@ public class PotControl : MonoBehaviour {
 
 	public void missed() {
 		puckMode(false);
-		GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
+		GetComponent<AudioSource>().PlayOneShot(missedFx,2f);
 		clearCups();
 		failureMessage.text = "TOO SLOW";
 		backgroundMusic.Stop();
@@ -160,6 +167,7 @@ public class PotControl : MonoBehaviour {
 		if (puckCock.activeSelf) {
 			if(!puckCock.GetComponent<AudioSource>().isPlaying) {
 				puckMode(false);
+				GetComponent<AudioSource>().PlayOneShot(puckDoneFx);
 			}
 		}
 

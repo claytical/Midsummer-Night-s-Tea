@@ -58,6 +58,8 @@ public class Cup : MonoBehaviour {
 		
 			if (drops >= 6 || badDrops > 0 || waitingTime <= 0) {
 				served = true;
+				GetComponentInChildren<PersonPicker>().GetComponentInChildren<Person>().gameObject.GetComponent<Animator>().SetTrigger("smile");
+
 			}
 
 		
@@ -78,7 +80,6 @@ public class Cup : MonoBehaviour {
 				pot.feedbackMessage.text = "PERFECT POUR!";
 			}
 			pot.serve();
-			GetComponentInChildren<PersonPicker>().GetComponentInChildren<Person>().gameObject.GetComponent<Animator>().SetTrigger("smile");
 			pot.perfectPour();
 			pot.feedback.SetTrigger("show");
 			Debug.Log("PERFECT POUR");
@@ -96,13 +97,14 @@ public class Cup : MonoBehaviour {
 			pot.puckMode(false);
 			Debug.Log("WRONG TEA");
 		}
-		else if (drops > 6 && drops <= 8) {
+		else if (drops > 6 && drops <= 7) {
 			pot.serve();
 			pot.streak = 0;
 		}
-		else if(drops > 8) {
+		else if(drops >= 8) {
 			//OVER POUR
 			pot.serve();
+			pot.overPour();
 			pot.feedbackMessage.text = "OVER POUR!";
 			pot.feedback.SetTrigger("show");
 			pot.streak = 0;
