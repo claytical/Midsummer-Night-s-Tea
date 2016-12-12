@@ -80,12 +80,14 @@ public class Cup : MonoBehaviour {
 				pot.feedbackMessage.text = "PERFECT POUR!";
 			}
 			pot.serve();
-			pot.perfectPour();
+//			pot.perfectPour();
 			pot.feedback.SetTrigger("show");
 			Debug.Log("PERFECT POUR");
+			/*
 			if(pot.streak%3==0) {
 				pot.puckMode(true);
 			}
+			*/
 		}
 
 		else if (badDrops > 1) {
@@ -94,7 +96,7 @@ public class Cup : MonoBehaviour {
 			pot.wrongTea();
 			pot.feedbackMessage.text = "WRONG TEA!";
 			pot.feedback.SetTrigger("show");
-			pot.puckMode(false);
+//			pot.puckMode(false);
 			Debug.Log("WRONG TEA");
 		}
 		else if (drops > 6 && drops <= 7) {

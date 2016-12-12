@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Hold : MonoBehaviour {
 	private float timer;
-	public AudioSource hud;
+	public AudioSource[] loops;
 	public PotControl pot;
 	// Use this for initialization
 	void Start () {
@@ -14,16 +14,22 @@ public class Hold : MonoBehaviour {
 	void Update () {
 		timer--;
 
-		if (Input.GetKey(KeyCode.UpArrow )){
+		if (Input.anyKey){
 			begin();
 		}
+
 		if (timer < 0) {
 			begin();
 		}
 	}
 
 	void begin() {
-		pot.pour();
+		for(int i = 0; i < loops.Length; i++) {
+			loops[i].Play();
+		}
+		pot.Begin();
+		pot.backgroundMusicSnapshot.TransitionTo(.01f);
+		pot.spawner.StartSpawning();
 		timer = 300;
 		gameObject.SetActive(false);
 

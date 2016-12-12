@@ -1,20 +1,22 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Person.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/PotControl.cs">
     <Files>
+      <File FileName="Assets/PotControl.cs" Line="189" Column="35" />
+      <File FileName="Assets/CustomerSpawner.cs" Line="262" Column="1" />
+      <File FileName="Assets/Person.cs" Line="30" Column="63" />
       <File FileName="Assets/Couple.cs" Line="1" Column="1" />
       <File FileName="Assets/Cup.cs" Line="1" Column="1" />
       <File FileName="Assets/MainMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets/CupSpawner.cs" Line="1" Column="1" />
       <File FileName="Assets/Droplet.cs" Line="1" Column="1" />
       <File FileName="Assets/PersonPicker.cs" Line="1" Column="1" />
-      <File FileName="Assets/Person.cs" Line="1" Column="1" />
-      <File FileName="Assets/Hold.cs" Line="1" Column="1" />
-      <File FileName="Assets/EndGame.cs" Line="1" Column="1" />
-      <File FileName="Assets/PotControl.cs" Line="1" Column="1" />
+      <File FileName="Assets/Hold.cs" Line="13" Column="36" />
+      <File FileName="Assets/EndGame.cs" Line="17" Column="25" />
       <File FileName="Assets/Counter.cs" Line="1" Column="1" />
       <File FileName="Assets/Standard Assets/ParticleSystems/Scripts/WaterHoseParticles.cs" Line="1" Column="1" />
       <File FileName="Assets/CoupleCup.cs" Line="1" Column="1" />
+      <File FileName="Assets/Glass.cs" Line="26" Column="1" />
+      <File FileName="Assets/Teachievement.cs" Line="38" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

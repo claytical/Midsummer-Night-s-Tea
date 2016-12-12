@@ -89,7 +89,7 @@ public class CoupleCup : MonoBehaviour {
 			pot.serve();
 			pot.serve();
 //			GetComponentInChildren<PersonPicker>().GetComponentInChildren<Person>().gameObject.GetComponent<Animator>().SetTrigger("smile");
-			pot.perfectPour();
+//			pot.perfectPour();
 			pot.feedback.SetTrigger("show");
 			Debug.Log("PERFECT POUR");
 		}
