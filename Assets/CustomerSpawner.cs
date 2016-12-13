@@ -250,6 +250,7 @@ public class CustomerSpawner : MonoBehaviour {
 		else if(pot.cupsServed >= 145 && pot.cupsServed < 155) {
 			timeBetweenSpawns = 16;
 		}
+		/*
 		else if(pot.cupsServed >= 155 && pot.cupsServed < 165) {
 			timeBetweenSpawns = 15.5f;
 		}
@@ -259,7 +260,7 @@ public class CustomerSpawner : MonoBehaviour {
 		else if(pot.cupsServed >= 175 && pot.cupsServed < 185) {
 			timeBetweenSpawns = 14.5f;
 		}
-
+*/
 		if(pot.numberOfTeas != numberOfTeas) {
 			//leveled up!
 			pot.numberOfTeas = numberOfTeas;

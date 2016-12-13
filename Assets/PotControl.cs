@@ -56,10 +56,8 @@ public class PotControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		PlayerPrefs.DeleteAll();
 		refresh();
 		musicOffSnapshot.TransitionTo(.01f);
-		Debug.Log("MUSIC OFF SNAPSHOT");
 
 	}
 
@@ -129,7 +127,6 @@ public class PotControl : MonoBehaviour {
 		if (!gameOver) {
 			GetComponent<AudioSource>().PlayOneShot(wrongTeaFx,2f);
 			musicOffSnapshot.TransitionTo(.01f);
-			Debug.Log("MUSIC OFF SNAPSHOT");
 		}
 		gameOver = true;
 		spawner.shouldSpawn = false;
@@ -186,8 +183,8 @@ public class PotControl : MonoBehaviour {
 		Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
 
 		if (transform.position.x > -8 || transform.position.x < 8) {
-			if(Input.acceleration.y != 0) {
-				pos.x += (Input.acceleration.y * .5f);
+			if(Input.acceleration.x != 0) {
+				pos.x += (Input.acceleration.x * .7f);
 			}
 			else {
 				pos.x += (Input.GetAxis("Horizontal") * .5f);
