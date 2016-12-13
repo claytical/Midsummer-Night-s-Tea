@@ -63,7 +63,7 @@ public class PotControl : MonoBehaviour {
 
 	public void perfectPour(int count) {
 		streak = count;
-		if (streak > 1) {
+		if (streak > 2) {
 			GetComponent<AudioSource>().PlayOneShot(comboFx,2f);
 			feedbackMessage.text = "PERFECT POUR x" + count;
 		}
@@ -130,13 +130,15 @@ public class PotControl : MonoBehaviour {
 		}
 		gameOver = true;
 		spawner.shouldSpawn = false;
-		failureMessage.text = "You must be exhausted, serving customers the wrong tea and all. Rest up. Tomorrow is a new day.";
+		failureMessage.text = "You must be exhausted, serving customers the wrong tea and all. Maybe some Lemon City Tea would lift your spirits!";
 		endServed.text = served.text + " Customers Served";
 		completePanel.SetActive(true);
 		gameControl.SetActive(false);
 		pouring = false;
 	}
-		
+	public void buyLemonCityTea() {
+		Application.OpenURL ("http://www.lemoncitytea.com/collections/tea-blends");
+	}
 	public void missed() {
 		if(!gameOver) {
 			GetComponent<AudioSource>().PlayOneShot(missedFx,2f);
@@ -146,7 +148,7 @@ public class PotControl : MonoBehaviour {
 		}
 		gameOver = true;
 		spawner.shouldSpawn = false;
-		failureMessage.text = "Better close up your shop, looks like you've got too many customers to handle. Rest up. Tomorrow is a new day.";
+		failureMessage.text = "Better close up your shop, looks like you've got too many customers to handle. Maybe some Lemon City Tea would lift your spirits!";
 		endServed.text = served.text + " Customers Served";
 		completePanel.SetActive(true);
 		gameControl.SetActive(false);
@@ -182,13 +184,14 @@ public class PotControl : MonoBehaviour {
 	public void move() {
 		Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
 
-		if (transform.position.x > -8 || transform.position.x < 8) {
-			if(Input.acceleration.x != 0) {
+		if (transform.position.x > -8 && transform.position.x < 8) {
+			if (Input.acceleration.x != 0) {
 				pos.x += (Input.acceleration.x * .7f);
+			} else {
+				pos.x += (Input.GetAxis ("Horizontal") * .5f);
 			}
-			else {
-				pos.x += (Input.GetAxis("Horizontal") * .5f);
-			}
+		} else {
+			pos = Vector3.MoveTowards(transform.position, new Vector3(0,transform.position.y, transform.position.z), .01f);
 		}
 		transform.position = pos;
 

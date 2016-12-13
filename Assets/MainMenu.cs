@@ -13,6 +13,11 @@ public class MainMenu : MonoBehaviour {
 	
 	}
 
+	public void gotoWebsite() {
+		//BUY SOME TEA!
+		Application.OpenURL("http://www.lemoncitytea.com");
+	}
+
 	public void playGame() {
 		Application.LoadLevel(1);
 	}

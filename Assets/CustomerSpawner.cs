@@ -37,7 +37,7 @@ public class CustomerSpawner : MonoBehaviour {
 			if(served == spawned) {
 				checkPours();
 			}
-			else if((timeBetweenSpawns - 5) < timer) {
+			else if((timeBetweenSpawns + (spawned * 5) - 5) < timer) {
 				//BUG OUT
 				if (!bugging) {
 					if(streak) {
@@ -51,7 +51,7 @@ public class CustomerSpawner : MonoBehaviour {
 						bugging = true;
 				}
 				checkTime();
-				if(timeBetweenSpawns < timer) {
+				if((timeBetweenSpawns + (spawned * 5) )< timer) {
 					checkPours();
 				}
 			}
@@ -120,7 +120,7 @@ public class CustomerSpawner : MonoBehaviour {
 				longestStreak = streakLength;
 			}
 
-			if(streakLength > 1) {
+			if(streakLength > 3) {
 				streak = true;
 				pot.perfectPour(streakLength);
 				pot.GetComponent<Animator>().SetTrigger("perfect");
@@ -131,7 +131,7 @@ public class CustomerSpawner : MonoBehaviour {
 			//OVER POURED OR UNDERPOURED
 			endStreak();
 			pot.badPourFx();
-			pot.feedbackMessage.text = "BAD POUR!";
+			pot.feedbackMessage.text = "TOO MUCH!";
 			pot.feedback.SetTrigger("show");
 
 		}
@@ -227,40 +227,69 @@ public class CustomerSpawner : MonoBehaviour {
 			timeBetweenSpawns = 20;
 		}
 		else if(pot.cupsServed >= 75 && pot.cupsServed < 85) {
-			timeBetweenSpawns = 19.5f;
-		}
-		else if(pot.cupsServed >= 85 && pot.cupsServed < 95) {
 			timeBetweenSpawns = 19;
 		}
-		else if(pot.cupsServed >= 95 && pot.cupsServed < 105) {
-			timeBetweenSpawns = 18.5f;
-		}
-		else if(pot.cupsServed >= 105 && pot.cupsServed < 115) {
+		else if(pot.cupsServed >= 85 && pot.cupsServed < 95) {
 			timeBetweenSpawns = 18;
 		}
-		else if(pot.cupsServed >= 115 && pot.cupsServed < 125) {
-			timeBetweenSpawns = 17.5f;
+		else if(pot.cupsServed >= 95 && pot.cupsServed < 105) {
+			timeBetweenSpawns = 17f;
 		}
-		else if(pot.cupsServed >= 125 && pot.cupsServed < 135) {
-			timeBetweenSpawns = 17;
-		}
-		else if(pot.cupsServed >= 135 && pot.cupsServed < 145) {
-			timeBetweenSpawns = 16.5f;
-		}
-		else if(pot.cupsServed >= 145 && pot.cupsServed < 155) {
+		else if(pot.cupsServed >= 105 && pot.cupsServed < 115) {
 			timeBetweenSpawns = 16;
 		}
-		/*
+		else if(pot.cupsServed >= 115 && pot.cupsServed < 125) {
+			timeBetweenSpawns = 15f;
+		}
+		else if(pot.cupsServed >= 125 && pot.cupsServed < 135) {
+			timeBetweenSpawns = 14;
+		}
+		else if(pot.cupsServed >= 135 && pot.cupsServed < 145) {
+			timeBetweenSpawns = 13f;
+		}
+		else if(pot.cupsServed >= 145 && pot.cupsServed < 155) {
+			timeBetweenSpawns = 12;
+		}
+
 		else if(pot.cupsServed >= 155 && pot.cupsServed < 165) {
-			timeBetweenSpawns = 15.5f;
+			timeBetweenSpawns = 11f;
 		}
 		else if(pot.cupsServed >= 165 && pot.cupsServed < 175) {
-			timeBetweenSpawns = 15;
+			timeBetweenSpawns = 10;
 		}
 		else if(pot.cupsServed >= 175 && pot.cupsServed < 185) {
-			timeBetweenSpawns = 14.5f;
+			timeBetweenSpawns = 9f;
 		}
-*/
+
+		else if(pot.cupsServed >= 185 && pot.cupsServed < 195) {
+			timeBetweenSpawns = 8f;
+		}
+
+		else if(pot.cupsServed >= 195 && pot.cupsServed < 205) {
+			timeBetweenSpawns = 7f;
+		}
+
+		else if(pot.cupsServed >= 205 && pot.cupsServed < 215) {
+			timeBetweenSpawns = 6f;
+		}
+
+		else if(pot.cupsServed >= 215 && pot.cupsServed < 225) {
+			timeBetweenSpawns = 5f;
+		}
+		else if(pot.cupsServed >= 225 && pot.cupsServed < 235) {
+			timeBetweenSpawns = 4f;
+		}
+		else if(pot.cupsServed >= 235 && pot.cupsServed < 245) {
+			timeBetweenSpawns = 3f;
+		}
+		else if(pot.cupsServed >= 245 && pot.cupsServed < 255) {
+			timeBetweenSpawns = 2f;
+		}
+
+		else if(pot.cupsServed >= 255 && pot.cupsServed < 265) {
+			timeBetweenSpawns = 1f;
+		}
+
 		if(pot.numberOfTeas != numberOfTeas) {
 			//leveled up!
 			pot.numberOfTeas = numberOfTeas;
