@@ -9,6 +9,7 @@ using UnityEditor;
 
 public class PotControl : MonoBehaviour {
 	public GameObject[] droplet;
+    public GameObject[] canisters;
 	public int selectedDroplet = 0;
 	public int numberOfTeas;
 	public GameObject spigot;
@@ -19,13 +20,9 @@ public class PotControl : MonoBehaviour {
 	public GameObject gameControl;
 	public CustomerSpawner spawner;
 	public AudioClip perfectPourFx;
-	public AudioClip refillFx;
+    public AudioClip alarmFx;
 	public AudioClip wrongTeaFx;
-	public AudioClip comboFx;
-	public AudioClip overPourFx;
-	public AudioClip outOfTeaFx;
 	public AudioClip missedFx;
-	public Wallpaper wallpaper;
 
 	public Animator feedback;
 	public Animator hud;
@@ -34,90 +31,74 @@ public class PotControl : MonoBehaviour {
 	public int startingPourAngle = 255;
 	public int endingPourAngle = 325;
 	public int cupsServed = 0;
-	public int strikes = 0;
+    public float moneyMade;
+    public int strikes = 0;
 	public int dropsLeft = 100;
 	public float tiltSpeed = 1.5f;
 	public bool gravity = false;
-	public bool pouring = false;
-	private bool gameOver = false;
-
-	private float gravitySpeed = .9f;
-	private float failTimer;
-	private int counter = 0;
-	private float debounce = 0.0f;
+    public bool playing = false;
+    private bool gameOver = false;
+    private bool pouring = false;
+    private float debounce = 0.0f;
+    private float previousAccelerationY = 0.0f;
 	public float repeat = 1f;
-	private bool pressingPourButton;
+    public int bonus;
 
 	public AudioMixerSnapshot backgroundMusicSnapshot;
 	public AudioMixerSnapshot poweredUpMusicSnapshot;
 	public AudioMixerSnapshot musicOffSnapshot;
-	public AudioMixerSnapshot backgroundMusicSnapshotAlarm;
-	public AudioMixerSnapshot poweredUpMusicSnapshotAlarm;
 
 	// Use this for initialization
 	void Start () {
 		refresh();
 		musicOffSnapshot.TransitionTo(.01f);
-
 	}
+    public void checkFlair()
+    {
+        if (transform.position.y > 5)
+        {
+            bonus++;
+        }
+    }
+    public void alarm()
+    {
+        GetComponent<AudioSource>().PlayOneShot(alarmFx, 2f);
+    }
 
-	public void perfectPour(int count) {
+    public void perfectPour(int count) {
 		streak = count;
-		if (streak > 2) {
-			GetComponent<AudioSource>().PlayOneShot(comboFx,2f);
-			feedbackMessage.text = "PERFECT POUR x" + count;
+		if (streak > 4) {
+			GetComponent<AudioSource>().PlayOneShot(perfectPourFx,2f);
+			feedbackMessage.text = "STREAK x" + count;
 		}
 		else {
 			GetComponent<AudioSource>().PlayOneShot(perfectPourFx,2f);
-			feedbackMessage.text = "PERFECT POUR!";
+			feedbackMessage.text = "AMAZING!";
 		}
 		feedback.SetTrigger("show");
-
-	}
-	public void overPour() {
-		GetComponent<AudioSource>().PlayOneShot(overPourFx,2f);
-	}
-		
-	public void serve() {
-		cupsServed++;
-		if (cupsServed%8 == 0) {
-			feedbackMessage.text = "REFILL!";
-			refill();
-			dropsLeft += 95;
-			feedback.SetTrigger("show");
-		}
-
 	}
 
-	public void refill() {
-		GetComponent<AudioSource>().PlayOneShot(refillFx);
-		hud.SetTrigger("normal");
-	}
 
 	public void refresh() {
+        playing = false;
 		pouring = false;
-		failTimer = 9999f;
 		gameOver = false;
 		gameControl.SetActive(true);
-//		backgroundMusicSnapshot.TransitionTo(.01f);
-//		Debug.Log("BG SNAPSHOT");
-
 		hud.SetTrigger("normal");
 		dropsLeft = 105;
-		cupsServed = 0;
-		served.text = cupsServed.ToString();
+        bonus = 0;
+        cupsServed = 0;
+        moneyMade = 0;
+		served.text = moneyMade.ToString("$0.00");
 		streak = 0;
-		spawner.streak = false;
-		spawner.streakLength = 0;
-		spawner.longestStreak = 0;
-		spawner.streakParticleSystem.SetActive(false);
+        spawner.Reset();
 		selectedDroplet = 0;
+        highlightCanister(0);
 		Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
 		c.a = 100f;
 		GetComponent<SpriteRenderer>().color = c;
-
-
 	}
+
 
 	public void badPourFx() {
 		GetComponent<AudioSource>().PlayOneShot(missedFx,2f);
@@ -131,14 +112,17 @@ public class PotControl : MonoBehaviour {
 		gameOver = true;
 		spawner.shouldSpawn = false;
 		failureMessage.text = "You must be exhausted, serving customers the wrong tea and all. Maybe some Lemon City Tea would lift your spirits!";
-		endServed.text = served.text + " Customers Served";
+		endServed.text = moneyMade.ToString("$0.00");
 		completePanel.SetActive(true);
 		gameControl.SetActive(false);
 		pouring = false;
+        playing = false;
 	}
+
 	public void buyLemonCityTea() {
 		Application.OpenURL ("http://www.lemoncitytea.com/collections/tea-blends");
 	}
+
 	public void missed() {
 		if(!gameOver) {
 			GetComponent<AudioSource>().PlayOneShot(missedFx,2f);
@@ -149,19 +133,13 @@ public class PotControl : MonoBehaviour {
 		gameOver = true;
 		spawner.shouldSpawn = false;
 		failureMessage.text = "Better close up your shop, looks like you've got too many customers to handle. Maybe some Lemon City Tea would lift your spirits!";
-		endServed.text = served.text + " Customers Served";
+		endServed.text = cupsServed + " Customers Served";
 		completePanel.SetActive(true);
 		gameControl.SetActive(false);
 		pouring = false;
-
+        playing = false;
 	}
 
-	public void lowTea() {
-		feedbackMessage.text = "RUNNING OUT OF TEA!";
-		feedback.SetTrigger("show");
-
-	}
-	// Update is called once per frame
 
 	public void chooseTea() {
 		selectedDroplet++;
@@ -171,18 +149,53 @@ public class PotControl : MonoBehaviour {
 		Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
 		c.a = 100f;
 		GetComponent<SpriteRenderer>().color = c;
+        highlightCanister(selectedDroplet);
 
 	}
 
-	public void selectTea(int tea) {
+    private void highlightCanister(int tea)
+    {
+        for (int i = 0; i < canisters.Length; i++)
+        {
+            canisters[i].GetComponent<Outline>().enabled = false;
+            canisters[i].GetComponent<Shadow>().enabled = false;
+
+        }
+        canisters[tea].GetComponent<Outline>().enabled = true;
+        canisters[tea].GetComponent<Shadow>().enabled = true;
+
+    }
+
+    public void selectTea(int tea) {
 		selectedDroplet = tea;
 		Color c = droplet[selectedDroplet].GetComponent<SpriteRenderer>().color;
 		c.a = 100f;
 		GetComponent<SpriteRenderer>().color = c;
+        highlightCanister(tea);    
 	}
 
-	public void move() {
-		Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
+    public void lift()
+    {
+        Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
+        if (transform.position.y >= 2 && transform.position.y < 7)
+        {
+            if (Input.acceleration.y > 0)
+            {
+                pos.y += (Input.acceleration.y * .7f);
+            }
+            else if(Input.GetAxis("Vertical") > 0)
+            {
+                pos.y += (Input.GetAxis("Vertical") * .5f);
+            }
+        }
+        transform.position = pos;
+
+
+    }
+
+    public void move() {
+        Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
 
 		if (transform.position.x > -8 && transform.position.x < 8) {
 			if (Input.acceleration.x != 0) {
@@ -191,71 +204,64 @@ public class PotControl : MonoBehaviour {
 				pos.x += (Input.GetAxis ("Horizontal") * .5f);
 			}
 		} else {
-			pos = Vector3.MoveTowards(transform.position, new Vector3(0,transform.position.y, transform.position.z), .01f);
-		}
-		transform.position = pos;
-
-	}
-	public void moveLeft() {
-		Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
-
-		if (transform.position.x > -8) {
-			pos.x -= .1f;
-		}
-		transform.position = pos;
-
-	}
-
-	public void moveRight() {
-		Vector3 pos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
-		if (transform.position.x < 8) {
-			pos.x +=.1f;
+            pos = Vector3.MoveTowards(transform.position, new Vector3(0f,transform.position.y, transform.position.z), .01f);
 		}
 		transform.position = pos;
 
 	}
 
 	void Update () {
-		if (pouring) {
+		if (playing) {
+            if (!pouring)
+            {
+                move();
 
-			if(Input.GetButtonDown("Fire2")) {
+            }
+            else
+            {
+                lift();
+            }
+
+            if (Input.GetButtonDown("Fire2")) {
 				chooseTea();
 			}
-			move();
 
-			if(!IsInvoking("CheckPour")) {
+            if (!IsInvoking("CheckPour")) {
 				InvokeRepeating("CheckPour",0,repeat);
 			}
 
-			if(Input.GetButton("Fire1") || pressingPourButton) {
+			if(Input.GetButton("Fire1") || pouring) {
 				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, -90), Time.deltaTime * 10f);
 			}
-
 			else {
 				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 10f);
 			}
-				
-			served.text = cupsServed.ToString();
+
+			if(Input.GetButtonDown("Fire1"))
+            {
+                pouring = true;
+            }
+            if(Input.GetButtonUp("Fire1"))
+            {
+                bonus = 0;
+                pouring = false;
+            }
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 2f, transform.position.z), .1f);
+            served.text = moneyMade.ToString("$0.00");
 		}
 		else {
 			CancelInvoke("CheckPour");
 		}
 	}
 
-	public void pressingPour() {
-		pressingPourButton = true;
-	
-	}
-
-	public void stopPouring() {
-		pressingPourButton = false;
-	}
+    public void setPouring(bool p)
+    {
+        pouring = p;
+    }
 
 	void CheckPour() {
-//		if(Input.GetButton("Fire1")) {
-			if (transform.rotation.eulerAngles.z <= 290 && transform.rotation.eulerAngles.z  >= 200) {
+		if (transform.rotation.eulerAngles.z <= 290 && transform.rotation.eulerAngles.z  >= 200) {
 				Pour();
-//			}
 		}
 
 	}
@@ -269,14 +275,6 @@ public class PotControl : MonoBehaviour {
 
 	public void Begin() {
 		gameOver = false;
-		pouring = true;
-//		backgroundMusicSnapshot.TransitionTo(.01f);
-
-
-	}
-
-	float map(float s, float a1, float a2, float b1, float b2)
-	{
-		return b1 + (s-a1)*(b2-b1)/(a2-a1);
+        playing = true;
 	}
 }

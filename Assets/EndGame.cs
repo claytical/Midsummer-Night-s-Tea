@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class EndGame : MonoBehaviour {
 	public PotControl pot;
@@ -20,7 +21,8 @@ public class EndGame : MonoBehaviour {
 	}
 
 	public void backtoMain() {
-		Application.LoadLevel(0);
+        SceneManager.LoadScene(0);
+//		Application.LoadLevel(0);
 	}
 
 
